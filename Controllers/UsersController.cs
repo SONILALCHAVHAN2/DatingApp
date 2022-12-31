@@ -5,14 +5,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.Data;
 using DatingApp.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace DatingApp.Controllers
 {
-    [Route("api/[controller]")]//api/Users
-    public class UsersController : Controller
+   [Authorize]
+    public class UsersController : BaseApiController
     {
         private readonly ILogger<UsersController> _logger;
         
@@ -24,7 +25,7 @@ namespace DatingApp.Controllers
            
             _logger = logger;
         }
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         { 
@@ -33,7 +34,7 @@ namespace DatingApp.Controllers
            return users;
         }
 
-
+      
         [HttpGet("{id}")]
         public  async Task<ActionResult<AppUser>> GetUser(int id)
         {
@@ -44,7 +45,7 @@ namespace DatingApp.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View("Error!");
+            return BadRequest();
         }
     }
 }
